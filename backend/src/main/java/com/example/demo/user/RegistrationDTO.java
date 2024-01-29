@@ -1,0 +1,40 @@
+package com.example.demo.user;
+
+// because all we need to register a user is username and password and not an entire ApplicationUser object we can create this Data Transfer Object class that will act as a placeholder/filter for an ApplicationUser enabling us to pass only the neccessary fields needed to register a user 
+public class RegistrationDTO {
+
+  private String username;
+  private String password;
+
+  public RegistrationDTO() {
+    super();
+  }
+
+  public RegistrationDTO(String username, String password) {
+    super();
+    this.username = username;
+    this.password = password;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return "RegistrationDTO [username=" + username + ", password=" + password + "]";
+  }
+
+}
