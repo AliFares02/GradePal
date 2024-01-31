@@ -4,6 +4,7 @@ import {  FaCheck } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
+import { RxDividerVertical } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -34,7 +35,6 @@ export default function Class() {
   const [newStudentAge, setNewStudentAge] = useState(0);
   const [newStudentGrade, setNewStudentGrade] = useState(0);
   const [characterCount, setCharacterCount] = useState(0);
-  const [classAvg, setClassAvg] = useState(0);
 
   const {user} = useContext(AuthContext);
 
@@ -167,6 +167,7 @@ export default function Class() {
     fetchUpdatedClassroom();
   }, [])
 
+
   return (
     <>
     {displayDeleteStudentConfirm && (
@@ -196,7 +197,7 @@ export default function Class() {
             {studentId}
           </div>
 
-          <input type="text" placeholder={studentName} className='border-2 rounded-lg border-teal-300 outline-none p-1 mr-2 mb-2 w-full' maxLength="30" onChange={(e) => setNewStudentName(e.target.value.trimStart())}/>
+          <input type="text" placeholder={studentName} value={newStudentName} className='border-2 rounded-lg border-teal-300 outline-none p-1 mr-2 mb-2 w-full' maxLength="30" onChange={(e) => setNewStudentName(e.target.value.trimStart())}/>
 
           <label htmlFor="student_age">Student age:</label>
           <input
@@ -274,7 +275,7 @@ export default function Class() {
         <form action="submit" onSubmit={handleAddStudent} className='relative bg-white p-5 rounded-lg h-auto w-2/6 min-w-[250px] min-h-[300px] max-w-[450px]'>
           <input type="text" placeholder='Student ID...' required value={studentId} onChange={(e) => setStudentId(e.target.value.trim())} className='border-2 rounded-lg border-teal-300 outline-none p-1 mr-2 mb-2 w-full'/>
 
-          <input type="text" placeholder='Student name...' required value={studentName} onChange={(e) => setStudentName(e.target.value.trimStart())} className='border-2 rounded-lg border-teal-300 outline-none p-1 mr-2 mb-2 w-full'/>
+          <input type="text" placeholder='Student name...' required value={studentName} onChange={(e) => setStudentName(e.target.value.trimStart())} className='border-2 rounded-lg border-teal-300 outline-none p-1 mr-2 mb-2 w-full' maxLength={30}/>
 
           <label htmlFor="student_age">Student age:</label>
           <input
@@ -330,27 +331,41 @@ export default function Class() {
             <div className="absolute top-1 right-1 text-teal-400 cursor-pointer" onClick={(e) => setDisplayChangeDescriptionForm(true)}><FaEdit/></div>
           </div>
           
-          <div className="flex justify-between items-center -mb-2">
+          <div className="flex flex-col justify-between items-center -mb-2 sm:flex-row ">
+            <div className="flex gap-1 items-center">
+              <label>Starts: </label>
+              <input type="date" className="w-auto  min-h-7  border-2 border-teal-300 rounded-lg px-1 cursor-pointer hover:bg-teal-300 hover:text-white transition:hover duration-300" placeholder={classRoomData?.startDate} onClick={() => {
+
+              }}/>
+            </div>
+
+            <div>{<RxDividerVertical className=" text-teal-500"/>}</div>
+
             <div className="flex gap-1 items-center">
               <label>Class size: </label>
-              <div className="w-auto h-auto min-h-7  border-2 border-teal-400 rounded-lg px-1">{classRoomData?.students.length}</div>
+              <div className="w-auto  min-h-7  border-2 border-teal-400 rounded-lg px-1">{classRoomData?.students.length}</div>
             </div>
+
+            <div>{<RxDividerVertical className=" text-teal-500"/>}</div>
 
             <div className="flex gap-1 items-center">
                 <label>Class Average: </label>
-                <div className="w-auto border-2 border-teal-400 rounded-lg px-1">{Math.round(classRoomData?.classAvg)}</div>
+                <div className="w-auto border-2 border-teal-400 rounded-lg px-1">{Math.round(0 | classRoomData?.classAvg)}</div>
             </div>
           </div>
               
           <div className="h-auto">
             <label>Students:</label>
-            <div className="items-center w-full h-auto min-h-12 max-h-[200px] overflow-auto border-2 p-1 border-teal-400 rounded-lg mb-2">
-              <ul className="flex flex-col gap-2 w-8/12 mr-1">
+            <div className="items-center w-full h-auto min-h-12 max-h-[200px] overflow-y-auto border-2 p-1 border-teal-400 rounded-lg mb-2">
+              <ul className="flex flex-col gap-2 w-full">
                {classRoomData?.students.map((student) => {
                 return (
                   <li key={student.studentId} className="flex justify-between items-center border-2 border-teal-400 rounded-lg w-full p-1" onMouseEnter={() => setShowIcons(student.studentId)} onMouseLeave={() => setShowIcons(null)}>
                     <p>
                       {student?.name}
+                    </p>
+                    <p>
+                      Grade: {student.grade}
                     </p>
                     {showIcons === student.studentId && (
                       <div className="flex gap-1">
